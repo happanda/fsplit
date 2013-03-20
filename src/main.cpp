@@ -1,5 +1,4 @@
-#include <iostream>
-#include <vector>
+#include <stdio.h>
 #include <Windows.h>
 
 #include "file_mapping.h"
@@ -7,17 +6,21 @@
 int main(int argc, char* argv[])
 {
     size_t size = 12;
+    SYSTEM_INFO  sys_info;
+    mapped_file  mf;
+    DWORD   err;
+    char*   buf;
+    size_t  i;
 
-    mapped_file mf = map_file("input", size);
-    DWORD err = GetLastError();
-    std::cout << "'";
-    char* buf = (char*)mf.region;
-    for (size_t i = 0; i < size; ++i)
-        std::cout << buf[i];
-    std::cout << "'";
+    mf = map_file("input", size);
+    err = GetLastError();
+    printf("'");
+    buf = (char*)region(mf);
+    for (i = 0; i < size; ++i)
+        printf("%c", buf[i]);
+    printf("'");
     unmap_file(mf);
 
-    SYSTEM_INFO sys_info;
     GetSystemInfo(&sys_info);
 
     return 0;
