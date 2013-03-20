@@ -11,11 +11,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\file_mapping.cpp" />
-    <ClCompile Include="..\src\main.cpp" />
+    <ClInclude Include="..\src\file_mapping.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\file_mapping.h" />
+    <ClCompile Include="..\src\file_mapping.c" />
+    <ClCompile Include="..\src\main.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2B12D362-3044-4245-B520-180201A93249}</ProjectGuid>

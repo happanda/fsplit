@@ -1,18 +1,23 @@
 #pragma once
-#include <stdint.h>
+#include <stdio.h>
+#include <Windows.h>
 
-typedef uint64_t  map_size_t;
+typedef int  map_size_t;
 
-struct mapped_file
+typedef struct
 {
-    struct  impl;
-    impl*   pimpl;
-};
+    void*   region   ;
+#ifdef _WIN32
+    void*   reg_start;
+    HANDLE  hFile    ;
+    HANDLE  hMapping ;
+#elif __linux__
+#else
+#   error "Unsupported platform"
+#endif
+} mapped_file;
 
-mapped_file map_file(char const* file, map_size_t buf_size,
-    map_size_t offset = 0, bool write_access = false);
+mapped_file map_file(char const* file, map_size_t buf_size, map_size_t offset, int write_access);
 
-bool unmap_file(mapped_file const& mf);
-
-void* region(mapped_file const& mf);
+int unmap_file(mapped_file const* mf);
 

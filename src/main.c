@@ -12,14 +12,14 @@ int main(int argc, char* argv[])
     char*   buf;
     size_t  i;
 
-    mf = map_file("input", size);
+    mf = map_file("input", size, 0, 0);
     err = GetLastError();
     printf("'");
-    buf = (char*)region(mf);
+    buf = (char*)mf.region;
     for (i = 0; i < size; ++i)
         printf("%c", buf[i]);
     printf("'");
-    unmap_file(mf);
+    unmap_file(&mf);
 
     GetSystemInfo(&sys_info);
 
