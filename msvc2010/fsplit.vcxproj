@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\file_mapping.h" />
+    <ClInclude Include="..\src\file_op.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\file_mapping.c" />

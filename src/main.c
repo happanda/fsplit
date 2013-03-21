@@ -5,7 +5,7 @@
 
 int main(int argc, char* argv[])
 {
-    size_t size = 12;
+    size_t size = 8;
     SYSTEM_INFO  sys_info;
     mapped_file  mf;
     DWORD   err;
@@ -14,11 +14,9 @@ int main(int argc, char* argv[])
 
     mf = map_file("input", size, 0, 0);
     err = GetLastError();
-    printf("'");
     buf = (char*)mf.region;
-    for (i = 0; i < size; ++i)
+    for (i = 0; i < mf.size; ++i)
         printf("%c", buf[i]);
-    printf("'");
     unmap_file(&mf);
 
     GetSystemInfo(&sys_info);

@@ -6,6 +6,7 @@
 #endif
 
 #include "file_mapping.h"
+#include "file_op.h"
 
 
 #ifdef _WIN32
@@ -13,11 +14,23 @@
 mapped_file map_file(char const* file, map_size_t buf_size,
     map_size_t offset, int write_access)
 {
-    mapped_file mf;
+    int64_t      fsize;
+    mapped_file  mf;
+    SYSTEM_INFO  sys_info;
+
+    DWORD        true_offset;
+    SIZE_T       true_size  ;
+    size_t       shift_bytes;
 
     DWORD open_file_access = GENERIC_READ | (write_access != 0 ? GENERIC_WRITE : 0);
     DWORD flProtect        = write_access != 0 ? PAGE_READWRITE : PAGE_READONLY;
     DWORD map_view_access  = write_access != 0 ? FILE_MAP_WRITE : FILE_MAP_READ;
+
+    memset(&mf, 0, sizeof(mf));
+
+    fsize = file_size(file);
+    if (fsize < 0)
+        return mf;
 
     mf.hFile = CreateFileA(file, open_file_access,
         FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_FLAG_RANDOM_ACCESS, 0);
@@ -27,9 +40,17 @@ mapped_file map_file(char const* file, map_size_t buf_size,
         mf.hMapping = CreateFileMapping(mf.hFile, 0, flProtect, 0, 0, 0);
         if (mf.hMapping != NULL)
         {
-            // TODO: fix the OffsetHigh and OffsetLow
-            mf.reg_start = MapViewOfFileEx(mf.hMapping, map_view_access, 0, (DWORD)offset, (SIZE_T)buf_size, 0);
-            mf.region = mf.reg_start; // TODO: calculate region
+            GetSystemInfo(&sys_info);
+            true_offset = (DWORD)(offset / sys_info.dwAllocationGranularity) * sys_info.dwAllocationGranularity;
+            shift_bytes = offset % sys_info.dwAllocationGranularity;
+            true_size   = (SIZE_T)(buf_size + shift_bytes);
+            if (true_size + true_offset > fsize)
+                true_size = (SIZE_T)(fsize - true_offset);
+
+            mf.reg_start = MapViewOfFileEx(mf.hMapping, map_view_access, 0,
+                true_offset, true_size, 0);
+            mf.region = (char*)mf.reg_start + shift_bytes; // TODO: calculate region
+            mf.size   = true_size - shift_bytes;
         }
     }
     return mf;

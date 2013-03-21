@@ -1,12 +1,15 @@
 #pragma once
+#include <stdint.h>
 #include <stdio.h>
 #include <Windows.h>
 
-typedef int  map_size_t;
+typedef int64_t  map_size_t;
 
 typedef struct
 {
-    void*   region   ;
+    void*       region;
+    map_size_t  size  ;
+
 #ifdef _WIN32
     void*   reg_start;
     HANDLE  hFile    ;
