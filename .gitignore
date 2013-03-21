@@ -15,3 +15,8 @@
 # Visual Studio
 *.suo
 *.user
+*.pdb
+
+# Qt Creator
+*.Debug
+*.Release
