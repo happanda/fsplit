@@ -13,9 +13,11 @@
   <ItemGroup>
     <ClInclude Include="..\src\file_mapping.h" />
     <ClInclude Include="..\src\file_op.h" />
+    <ClInclude Include="..\src\file_stream.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\file_mapping.c" />
+    <ClCompile Include="..\src\file_stream.c" />
     <ClCompile Include="..\src\main.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
