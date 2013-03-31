@@ -1,14 +1,16 @@
 #include <stdio.h>
-#include <Windows.h>
+#ifdef _WIN32
+#   include <Windows.h>
+#endif
 
 #include "file_stream.h"
 
 int main(int argc, char* argv[])
 {
-    size_t size = 8;
+#ifdef _WIN32
     SYSTEM_INFO  sys_info;
-    mapped_file  mf;
     DWORD   err;
+#endif
     char    buf[120];
     int     i;
 

@@ -1,4 +1,6 @@
 #include <assert.h>
+#include <stdlib.h>
+#include <string.h>
 
 #ifdef _WIN32
 #   include <Windows.h>
@@ -113,7 +115,7 @@ int read(file_stream* fs, char* buf, size_t num_bytes)
         fs->stream.pos_in_buf += min_buf;
         read_bytes            += min_buf;
 
-        if (fs->stream.pos_in_buf == fs->stream.mf.size)
+        if ((map_size_t)fs->stream.pos_in_buf == fs->stream.mf.size)
         {   // move mapped region further in file
             fs->stream.buf_offset += (size_t)fs->stream.mf.size;
             fs->stream.pos_in_buf = 0;

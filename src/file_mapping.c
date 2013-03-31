@@ -1,6 +1,10 @@
+#include <string.h>
 #ifdef _WIN32
 #   include <Windows.h>
 #elif __linux__
+#   include <fcntl.h>
+#   include <sys/mman.h>
+#   include <unistd.h>
 #else
 #   error "Unsupported platform"
 #endif
@@ -29,7 +33,7 @@ mapped_file map_file(char const* file, map_size_t buf_size,
     memset(&mf, 0, sizeof(mf));
 
     fsize = file_size(file);
-    if (fsize < 0)
+    if (fsize <= 0)
         return mf;
 
     mf.hFile = CreateFileA(file, open_file_access,
@@ -49,7 +53,7 @@ mapped_file map_file(char const* file, map_size_t buf_size,
 
             mf.reg_start = MapViewOfFileEx(mf.hMapping, map_view_access, 0,
                 true_offset, true_size, 0);
-            mf.region = (char*)mf.reg_start + shift_bytes; // TODO: calculate region
+            mf.region = (char*)mf.reg_start + shift_bytes;
             mf.size   = true_size - shift_bytes;
         }
     }
@@ -67,6 +71,62 @@ int unmap_file(mapped_file const* mf)
 }
 
 #elif __linux__
+
+mapped_file map_file(char const* file, map_size_t buf_size,
+    map_size_t offset, int write_access)
+{
+    int64_t      fsize;
+    mapped_file  mf;
+    int          fd;
+    int          open_flags;
+
+    int          page_size;
+    size_t       true_offset;
+    size_t       true_size  ;
+    size_t       shift_bytes;
+
+    int prot = PROT_READ;
+    if (write_access)
+        prot |= PROT_WRITE;
+    open_flags = write_access ? O_RDWR : O_RDONLY;
+
+
+    memset(&mf, 0, sizeof(mf));
+
+    fsize = file_size(file);
+    if (fsize <= 0)
+        return mf;
+
+    fd = open(file, open_flags);
+    if (fd != -1)
+    {
+        page_size = getpagesize();
+        true_offset = (offset / page_size) * page_size;
+        shift_bytes = offset % page_size;
+        true_size   = buf_size + shift_bytes;
+        if ((map_size_t)(true_size + true_offset) > fsize)
+            true_size = fsize - true_offset;
+
+        mf.reg_start = mmap(0, buf_size, prot, MAP_PRIVATE, fd, offset);
+        if (mf.reg_start == MAP_FAILED)
+        {
+            mf.region   = (char*)mf.reg_start + shift_bytes;
+            mf.reg_size = true_size;
+            mf.size     = true_size - shift_bytes;
+        }
+    }
+
+    return mf;
+}
+
+int unmap_file(mapped_file const* mf)
+{
+    if (mf->region == 0 || munmap(mf->reg_start, mf->reg_size) == 0)
+        return 1;
+    else
+        return 0;
+}
+
 #else
 #endif
 
