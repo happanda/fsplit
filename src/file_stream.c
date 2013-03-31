@@ -54,12 +54,12 @@ file_stream open_file(char const* path, open_mode om)
         }
     case om_write:
         {
-            fs.stream.file = fopen(path, "w");
+            fs.stream.file = fopen(path, "wb");
             break;
         }
     case om_append:
         {
-            fs.stream.file = fopen(path, "a");
+            fs.stream.file = fopen(path, "ab");
             break;
         }
     }
@@ -67,17 +67,46 @@ file_stream open_file(char const* path, open_mode om)
     return fs;
 }
 
-int read(file_stream* fs, char* buf, int num_bytes)
+int close_file(file_stream* fs)
 {
-    int read_bytes = 0;
-    int min_buf    = 0;
-    int bytes_left = 0;
+    int result = 0;
+
+    if (fs->path != 0)
+        free(fs->path);
+
+    switch (fs->mode)
+    {
+    case om_read:
+        {
+            if (fs->stream.mf.region != 0)
+            {
+                result = unmap_file(&fs->stream.mf);
+                memset(fs, 0, sizeof(fs));
+            }
+            break;
+        }
+    case om_write:
+    case om_append:
+        {
+            result = fclose(fs->stream.file);
+            break;
+        }
+    }
+
+    return result;
+}
+
+int read(file_stream* fs, char* buf, size_t num_bytes)
+{
+    size_t read_bytes = 0;
+    size_t min_buf    = 0;
+    size_t bytes_left = 0;
 
     assert(fs->mode == om_read);
 
     while (read_bytes < num_bytes)
     {
-        bytes_left = fs->stream.mf.size - fs->stream.pos_in_buf;
+        bytes_left = (size_t)(fs->stream.mf.size - fs->stream.pos_in_buf);
         min_buf = num_bytes < bytes_left ? num_bytes : bytes_left;
 
         memcpy(buf, (char*)fs->stream.mf.region + fs->stream.pos_in_buf, min_buf);
@@ -86,7 +115,7 @@ int read(file_stream* fs, char* buf, int num_bytes)
 
         if (fs->stream.pos_in_buf == fs->stream.mf.size)
         {   // move mapped region further in file
-            fs->stream.buf_offset += fs->stream.mf.size;
+            fs->stream.buf_offset += (size_t)fs->stream.mf.size;
             fs->stream.pos_in_buf = 0;
 
             if (!unmap_file(&fs->stream.mf))
@@ -101,10 +130,10 @@ int read(file_stream* fs, char* buf, int num_bytes)
     return read_bytes;
 }
 
-int write(file_stream* fs, char const* buf, int num_bytes)
+int write(file_stream* fs, char const* buf, size_t num_bytes)
 {
     assert(fs->mode == om_write || fs->mode == om_append);
 
-    fwrite(buf, sizeof(char), num_bytes, fs->stream.file);
+    return fwrite(buf, sizeof(char), num_bytes, fs->stream.file);
 }
 

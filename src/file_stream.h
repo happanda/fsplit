@@ -25,8 +25,9 @@ typedef struct
     } stream;
 } file_stream;
 
-file_stream open_file(char const* path, open_mode om);
+file_stream open_file (char const* path, open_mode om);
+int         close_file(file_stream* fs);
 
-int read (file_stream* fs, char*       buf, int buf_size);
-int write(file_stream* fs, char const* buf, int buf_size);
+int read (file_stream* fs, char*       buf, size_t buf_size);
+int write(file_stream* fs, char const* buf, size_t buf_size);
 
