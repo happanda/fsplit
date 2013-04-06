@@ -1,41 +1,16 @@
-SRC_DIR = ../src
+DEV_ROOT = ../.
+include($$DEV_ROOT/qtcreator/fsplit.pri)
 
-CONFIG(debug,debug|release){
-    PATH_SUFFIX = debug
-
-    message("Debug Configuration")
-} else {
-    PATH_SUFFIX = release
-
-    message("Release Configuration")
-}
-
-
-#############
-# build paths
-BUILD_PATH  = bin/$$PATH_SUFFIX
-MISC_PATH   = obj/$$PATH_SUFFIX
-OUT_PWD     = $$MISC_PATH
-DESTDIR     = $$BUILD_PATH
-OBJECTS_DIR = $$MISC_PATH
-MOC_DIR     = $$MISC_PATH
-UI_DIR      = $$MISC_PATH
-RCC_DIR     = $$MISC_PATH
-
-
-INCLUDE_PATH += $$SRC_DIR
-
-TEMPLATE = app
-CONFIG += console
+TEMPLATE = lib
 CONFIG -= qt
 
 HEADERS += \
     $$SRC_DIR/file_mapping.h \
     $$SRC_DIR/file_stream.h \
-    $$SRC_DIR/file_op.h
+    $$SRC_DIR/file_op.h \
+    $$SRC_DIR/dyn_lib.h \
+    $$SRC_DIR/export.h
 
 SOURCES += \
-    $$SRC_DIR/main.c \
     $$SRC_DIR/file_mapping.c \
     $$SRC_DIR/file_stream.c
-
