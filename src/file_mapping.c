@@ -18,7 +18,7 @@
 mapped_file map_file(char const* file, map_size_t buf_size,
     map_size_t offset, int write_access)
 {
-    int64_t      fsize;
+    map_size_t   fsize;
     mapped_file  mf;
     SYSTEM_INFO  sys_info;
 
@@ -75,7 +75,7 @@ int unmap_file(mapped_file const* mf)
 mapped_file map_file(char const* file, map_size_t buf_size,
     map_size_t offset, int write_access)
 {
-    int64_t      fsize;
+    map_size_t   fsize;
     mapped_file  mf;
     int          fd;
     int          open_flags;
