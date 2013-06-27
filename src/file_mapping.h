@@ -4,6 +4,7 @@
 #   include <Windows.h>
 #endif
 
+#include "export.h"
 #include "size_types.h"
 
 typedef API_PUBLIC struct

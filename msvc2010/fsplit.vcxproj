@@ -11,9 +11,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\export.h" />
     <ClInclude Include="..\src\file_mapping.h" />
     <ClInclude Include="..\src\file_op.h" />
     <ClInclude Include="..\src\file_stream.h" />
+    <ClInclude Include="..\src\size_types.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\file_mapping.c" />
@@ -63,7 +65,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;BUILDING_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

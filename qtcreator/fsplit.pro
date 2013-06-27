@@ -10,7 +10,8 @@ HEADERS += \
     $$SRC_DIR/file_stream.h \
     $$SRC_DIR/file_op.h \
     $$SRC_DIR/dyn_lib.h \
-    $$SRC_DIR/export.h
+    $$SRC_DIR/export.h \
+    ../src/size_types.h
 
 SOURCES += \
     $$SRC_DIR/file_mapping.c \
