@@ -1,11 +1,12 @@
 #pragma once
-#include <stdint.h>
 #include <stdio.h>
 
-static int64_t file_size(char const* path)
+#include "size_types.h"
+
+static map_size_t file_size(char const* path)
 {
-    FILE*    file;
-    int64_t  size;
+    FILE*       file;
+    map_size_t  size;
 
     file = fopen(path, "r");
     if (file == NULL)

@@ -1,14 +1,10 @@
 #pragma once
-#include <stdint.h>
 #include <stdio.h>
-
 #ifdef _WIN32
 #   include <Windows.h>
 #endif
 
-#include "export.h"
-
-typedef int64_t  map_size_t;
+#include "size_types.h"
 
 typedef API_PUBLIC struct
 {
