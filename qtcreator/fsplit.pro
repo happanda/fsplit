@@ -1,7 +1,8 @@
 DEV_ROOT = ../.
+TEMPLATE = lib
+
 include($$DEV_ROOT/qtcreator/fsplit.pri)
 
-TEMPLATE = lib
 CONFIG -= qt
 
 HEADERS += \

@@ -2,8 +2,8 @@
 
 #include "dyn_lib.h"
 
-#ifdef FSPLIT_LIB
-# define FSPLIT_API __HELPER_DL_EXPORT
+#ifdef BUILDING_DLL
+# define API_PUBLIC __HELPER_DL_EXPORT
 #else
-# define FSPLIT_API __HELPER_DL_IMPORT
+# define API_PUBLIC __HELPER_DL_IMPORT
 #endif

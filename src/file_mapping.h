@@ -6,13 +6,16 @@
 #   include <Windows.h>
 #endif
 
+#include "export.h"
+
 typedef int64_t  map_size_t;
 
-typedef struct
+typedef API_PUBLIC struct
 {
     void*       region;
     map_size_t  size  ;
 
+    // do not use
     void*   reg_start;
 #ifdef _WIN32    
     HANDLE  hFile    ;
@@ -24,7 +27,9 @@ typedef struct
 #endif
 } mapped_file;
 
-mapped_file map_file(char const* file, map_size_t buf_size, map_size_t offset, int write_access);
 
-int unmap_file(mapped_file const* mf);
+API_PUBLIC mapped_file map_file(char const* file, map_size_t buf_size, map_size_t offset, int write_access);
 
+API_PUBLIC int unmap_file(mapped_file const* mf);
+
+API_HIDDEN int get_granularity();

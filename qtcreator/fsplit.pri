@@ -25,3 +25,8 @@ RCC_DIR     = $$MISC_PATH
 
 INCLUDEPATH += $$SRC_DIR
 
+message($$TEMPLATE)
+contains(TEMPLATE, lib)|contains(TEMPLATE, vclib){
+    DEFINES += BUILDING_DLL
+}
+

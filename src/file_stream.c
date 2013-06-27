@@ -11,25 +11,6 @@
 
 #include "file_stream.h"
 
-int get_granularity()
-{
-    static int granularity = 0;
-
-    if (granularity == 0)
-    {
-#ifdef _WIN32
-        SYSTEM_INFO sys_info;
-        GetSystemInfo(&sys_info);
-        granularity = (int)sys_info.dwAllocationGranularity;
-#elif __linux__
-        granularity = 4096; // TODO: replace this
-#endif
-    }
-
-    return granularity;
-}
-
-
 file_stream open_file(char const* path, open_mode om)
 {
     file_stream fs;

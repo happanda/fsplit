@@ -13,6 +13,24 @@
 #include "file_op.h"
 
 
+int get_granularity()
+{
+    static int granularity = 0;
+
+    if (granularity == 0)
+    {
+#ifdef _WIN32
+        SYSTEM_INFO sys_info;
+        GetSystemInfo(&sys_info);
+        granularity = (int)sys_info.dwAllocationGranularity;
+#elif __linux__
+        granularity = getpagesize();
+#endif
+    }
+
+    return granularity;
+}
+
 #ifdef _WIN32
 
 mapped_file map_file(char const* file, map_size_t buf_size,
@@ -20,7 +38,6 @@ mapped_file map_file(char const* file, map_size_t buf_size,
 {
     int64_t      fsize;
     mapped_file  mf;
-    SYSTEM_INFO  sys_info;
 
     DWORD        true_offset;
     SIZE_T       true_size  ;
@@ -44,9 +61,8 @@ mapped_file map_file(char const* file, map_size_t buf_size,
         mf.hMapping = CreateFileMapping(mf.hFile, 0, flProtect, 0, 0, 0);
         if (mf.hMapping != NULL)
         {
-            GetSystemInfo(&sys_info);
-            true_offset = (DWORD)(offset / sys_info.dwAllocationGranularity) * sys_info.dwAllocationGranularity;
-            shift_bytes = offset % sys_info.dwAllocationGranularity;
+            true_offset = (DWORD)(offset / get_granularity()) * get_granularity();
+            shift_bytes = offset % get_granularity();
             true_size   = (SIZE_T)(buf_size + shift_bytes);
             if (true_size + true_offset > fsize)
                 true_size = (SIZE_T)(fsize - true_offset);
@@ -80,7 +96,6 @@ mapped_file map_file(char const* file, map_size_t buf_size,
     int          fd;
     int          open_flags;
 
-    int          page_size;
     size_t       true_offset;
     size_t       true_size  ;
     size_t       shift_bytes;
@@ -100,9 +115,8 @@ mapped_file map_file(char const* file, map_size_t buf_size,
     fd = open(file, open_flags);
     if (fd != -1)
     {
-        page_size = getpagesize();
-        true_offset = (offset / page_size) * page_size;
-        shift_bytes = offset % page_size;
+        true_offset = (offset / get_granularity()) * get_granularity();
+        shift_bytes = offset % get_granularity();
         true_size   = buf_size + shift_bytes;
         if ((map_size_t)(true_size + true_offset) > fsize)
             true_size = fsize - true_offset;
