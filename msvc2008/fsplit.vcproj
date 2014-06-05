@@ -162,6 +162,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath="..\src\cycle_buffer.c"
+				>
+			</File>
+			<File
 				RelativePath="..\src\dfa_search.c"
 				>
 			</File>
@@ -185,6 +189,10 @@
 			>
 			<File
 				RelativePath="..\src\cmd_args.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\cycle_buffer.h"
 				>
 			</File>
 			<File

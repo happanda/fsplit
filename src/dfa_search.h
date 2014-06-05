@@ -17,4 +17,4 @@ typedef API_PUBLIC struct
 API_PUBLIC int  fsp_automation_init(fsp_automation* aut, char const* pattern, size_t pattern_len);
 API_PUBLIC void fsp_automation_free(fsp_automation* aut);
 
-API_PUBLIC int  fsp_find_in(fsp_automation* aut, char const* str, size_t str_len);
+API_PUBLIC int  fsp_automation_find_in(fsp_automation* aut, char const* str, size_t str_len);

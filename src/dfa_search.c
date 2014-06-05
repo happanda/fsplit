@@ -43,7 +43,7 @@ void fsp_automation_free(fsp_automation* aut)
         free(aut->pattern);
 }
 
-int fsp_find_in(fsp_automation* aut, char const* str, size_t str_len)
+int fsp_automation_find_in(fsp_automation* aut, char const* str, size_t str_len)
 {
     int i = 0;
 

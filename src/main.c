@@ -56,8 +56,8 @@ int main(int argc, char* argv[])
 
     if (fsp_automation_init(&aut, "xyz", 3))
     {
-        printf("\n%d\n", fsp_find_in(&aut, "abcdefghijklmnopqrstuvwx", sizeof("abcdefghijklmnopqrstuvwx") - 1));
-        printf("\n%d\n", fsp_find_in(&aut, "yzzzyx", sizeof("yzzzyx") - 1));
+        printf("\n%d\n", fsp_automation_find_in(&aut, "abcdefghijklmnopqrstuvwx", sizeof("abcdefghijklmnopqrstuvwx") - 1));
+        printf("\n%d\n", fsp_automation_find_in(&aut, "yzzzyx", sizeof("yzzzyx") - 1));
         fsp_automation_free(&aut);
     }
     return 0;
