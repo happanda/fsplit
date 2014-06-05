@@ -12,7 +12,7 @@ typedef API_PUBLIC struct
     void*  region;
     fsp_map_size_t  size;
 
-    // do not use
+    // do not use directly
     void*   reg_start;
 #ifdef _WIN32    
     HANDLE  hFile    ;

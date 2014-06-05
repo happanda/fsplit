@@ -6,6 +6,7 @@
 typedef API_PUBLIC struct
 {
     char*  pattern;
+
 } fsp_cmd_args;
 
 

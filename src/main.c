@@ -32,11 +32,11 @@ int main(int argc, char* argv[])
     fsp_automation aut;
     fsp_cmd_args cmd_args;
 
-    if (!fsp_parse(argc, argv, &cmd_args))
-    {
-        printf("Arguments parse error\n");
-        return 1;
-    }
+    //if (!fsp_parse(argc, argv, &cmd_args))
+    //{
+    //    printf("Arguments parse error\n");
+    //    return 1;
+    //}
 
     //fs = fsp_open_file("input", om_read);
     //if (fsp_bad(&fs))
@@ -54,9 +54,10 @@ int main(int argc, char* argv[])
     //fsp_gen_name(filename, 1000, "AllYourBase", 1);
 
 
-    if (fsp_automation_init(&aut, "xy"))
+    if (fsp_automation_init(&aut, "xyz", 3))
     {
-        printf("\n%d\n", fsp_find_in(&aut, "abcdefghijklmnopqrstuvwxyz"));
+        printf("\n%d\n", fsp_find_in(&aut, "abcdefghijklmnopqrstuvwx", sizeof("abcdefghijklmnopqrstuvwx") - 1));
+        printf("\n%d\n", fsp_find_in(&aut, "yzzzyx", sizeof("yzzzyx") - 1));
         fsp_automation_free(&aut);
     }
     return 0;

@@ -5,12 +5,13 @@
 
 size_t const ALPHABET_SIZE = 256;
 
-int fsp_automation_init(fsp_automation* aut, char const* pattern)
+int fsp_automation_init(fsp_automation* aut, char const* pattern, size_t pattern_len)
 {
     int i = 0
       , j = 0;
 
-    aut->pattern_len = strlen(pattern);
+    aut->state = 0;
+    aut->pattern_len = pattern_len;
     aut->delta       = calloc(ALPHABET_SIZE * aut->pattern_len, sizeof(int));
     aut->pattern     = calloc(aut->pattern_len, sizeof(char));
 
@@ -42,16 +43,14 @@ void fsp_automation_free(fsp_automation* aut)
         free(aut->pattern);
 }
 
-int fsp_find_in(fsp_automation const* aut, char const* str)
+int fsp_find_in(fsp_automation* aut, char const* str, size_t str_len)
 {
-    int i = 0
-      , j = 0
-      , str_len = strlen(str);
+    int i = 0;
 
     for (i = 0; i < str_len; ++i) {
-        j = aut->delta[ALPHABET_SIZE * j + (unsigned char)str[i]];
-        if (j >= aut->pattern_len)
-            return (i - aut->pattern_len + 1);
+        aut->state = aut->delta[ALPHABET_SIZE * aut->state + (unsigned char)str[i]];
+        if (aut->state >= aut->pattern_len)
+            return i;
     }
 
     return -1;
