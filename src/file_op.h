@@ -3,10 +3,10 @@
 
 #include "size_types.h"
 
-static map_size_t file_size(char const* path)
+static fsp_map_size_t file_size(char const* path)
 {
-    FILE*       file;
-    map_size_t  size;
+    FILE*  file;
+    fsp_map_size_t  size;
 
     file = fopen(path, "r");
     if (file == NULL)

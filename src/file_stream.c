@@ -11,9 +11,20 @@
 
 #include "file_stream.h"
 
-file_stream open_file(char const* path, open_mode om)
+int fsp_bad(fsp_file_stream const* fs)
 {
-    file_stream fs;
+    if (NULL == fs)
+        return 0;
+
+    if (fs->mode == om_read)
+        return fs->stream.mf.region == 0 ? 1 : 0;
+
+    return fs->stream.file == 0 ? 1 : 0;
+}
+
+fsp_file_stream fsp_open_file(char const* path, fsp_open_mode om)
+{
+    fsp_file_stream fs;
     size_t      path_len;
 
     memset(&fs, 0, sizeof(fs));
@@ -32,7 +43,7 @@ file_stream open_file(char const* path, open_mode om)
         {
             fs.stream.buf_offset = 0;
             fs.stream.pos_in_buf = 0;
-            fs.stream.mf         = map_file(fs.path, get_granularity(), 0, 0);
+            fs.stream.mf         = fsp_map_file(fs.path, fsp_get_granularity(), 0, 0);
             break;
         }
     case om_write:
@@ -50,7 +61,7 @@ file_stream open_file(char const* path, open_mode om)
     return fs;
 }
 
-int close_file(file_stream* fs)
+int fsp_close_file(fsp_file_stream* fs)
 {
     int result = 0;
 
@@ -63,7 +74,7 @@ int close_file(file_stream* fs)
         {
             if (fs->stream.mf.region != 0)
             {
-                result = unmap_file(&fs->stream.mf);
+                result = fsp_unmap_file(&fs->stream.mf);
                 memset(fs, 0, sizeof(fs));
             }
             break;
@@ -79,7 +90,7 @@ int close_file(file_stream* fs)
     return result;
 }
 
-int read(file_stream* fs, char* buf, size_t num_bytes)
+int fsp_read(fsp_file_stream* fs, char* buf, size_t num_bytes)
 {
     size_t read_bytes = 0;
     size_t min_buf    = 0;
@@ -96,15 +107,15 @@ int read(file_stream* fs, char* buf, size_t num_bytes)
         fs->stream.pos_in_buf += min_buf;
         read_bytes            += min_buf;
 
-        if ((map_size_t)fs->stream.pos_in_buf == fs->stream.mf.size)
+        if ((fsp_map_size_t)fs->stream.pos_in_buf == fs->stream.mf.size)
         {   // move mapped region further in file
             fs->stream.buf_offset += (size_t)fs->stream.mf.size;
             fs->stream.pos_in_buf = 0;
 
-            if (!unmap_file(&fs->stream.mf))
+            if (!fsp_unmap_file(&fs->stream.mf))
                 return read_bytes;
 
-            fs->stream.mf = map_file(fs->path, fs->stream.mf.size, fs->stream.buf_offset, 0);
+            fs->stream.mf = fsp_map_file(fs->path, fs->stream.mf.size, fs->stream.buf_offset, 0);
             if (!fs->stream.mf.region || fs->stream.mf.size == 0)
                 return read_bytes;
         }
@@ -113,7 +124,7 @@ int read(file_stream* fs, char* buf, size_t num_bytes)
     return read_bytes;
 }
 
-int write(file_stream* fs, char const* buf, size_t num_bytes)
+int fsp_write(fsp_file_stream* fs, char const* buf, size_t num_bytes)
 {
     assert(fs->mode == om_write || fs->mode == om_append);
 

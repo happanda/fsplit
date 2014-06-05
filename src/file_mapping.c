@@ -13,7 +13,7 @@
 #include "file_op.h"
 
 
-int get_granularity()
+int fsp_get_granularity()
 {
     static int granularity = 0;
 
@@ -33,11 +33,11 @@ int get_granularity()
 
 #ifdef _WIN32
 
-mapped_file map_file(char const* file, map_size_t buf_size,
-    map_size_t offset, int write_access)
+fsp_mapped_file fsp_map_file(char const* file, fsp_map_size_t buf_size,
+    fsp_map_size_t offset, int write_access)
 {
-    map_size_t   fsize;
-    mapped_file  mf;
+    fsp_map_size_t   fsize;
+    fsp_mapped_file  mf;
 
     DWORD        true_offset;
     SIZE_T       true_size  ;
@@ -61,8 +61,8 @@ mapped_file map_file(char const* file, map_size_t buf_size,
         mf.hMapping = CreateFileMapping(mf.hFile, 0, flProtect, 0, 0, 0);
         if (mf.hMapping != NULL)
         {
-            true_offset = (DWORD)(offset / get_granularity()) * get_granularity();
-            shift_bytes = offset % get_granularity();
+            true_offset = (DWORD)(offset / fsp_get_granularity()) * fsp_get_granularity();
+            shift_bytes = offset % fsp_get_granularity();
             true_size   = (SIZE_T)(buf_size + shift_bytes);
             if (true_size + true_offset > fsize)
                 true_size = (SIZE_T)(fsize - true_offset);
@@ -76,7 +76,7 @@ mapped_file map_file(char const* file, map_size_t buf_size,
     return mf;
 }
 
-int unmap_file(mapped_file const* mf)
+int fsp_unmap_file(fsp_mapped_file const* mf)
 {
     if ((mf->region == 0 || UnmapViewOfFile(mf->region) != 0)
         && (mf->hMapping == 0 || CloseHandle(mf->hMapping) != 0)
@@ -88,11 +88,11 @@ int unmap_file(mapped_file const* mf)
 
 #elif __linux__
 
-mapped_file map_file(char const* file, map_size_t buf_size,
-    map_size_t offset, int write_access)
+fsp_mapped_file fsp_map_file(char const* file, fsp_map_size_t buf_size,
+    fsp_map_size_t offset, int write_access)
 {
-    map_size_t   fsize;
-    mapped_file  mf;
+    fsp_map_size_t   fsize;
+    fsp_mapped_file  mf;
     int          fd;
     int          open_flags;
 
@@ -115,8 +115,8 @@ mapped_file map_file(char const* file, map_size_t buf_size,
     fd = open(file, open_flags);
     if (fd != -1)
     {
-        true_offset = (offset / get_granularity()) * get_granularity();
-        shift_bytes = offset % get_granularity();
+        true_offset = (offset / fsp_get_granularity()) * fsp_get_granularity();
+        shift_bytes = offset % fsp_get_granularity();
         true_size   = buf_size + shift_bytes;
         if ((map_size_t)(true_size + true_offset) > fsize)
             true_size = fsize - true_offset;
@@ -133,7 +133,7 @@ mapped_file map_file(char const* file, map_size_t buf_size,
     return mf;
 }
 
-int unmap_file(mapped_file const* mf)
+int fsp_unmap_file(fsp_mapped_file const* mf)
 {
     if (mf->region == 0 || munmap(mf->reg_start, mf->reg_size) == 0)
         return 1;

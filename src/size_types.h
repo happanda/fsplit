@@ -4,7 +4,7 @@
 #endif
 
 #if (!defined _WIN32) || (_MSC_VER >= 1600)
-typedef int64_t  map_size_t;
+typedef int64_t  fsp_map_size_t;
 #else
-typedef __int64  map_size_t;
+typedef __int64  fsp_map_size_t;
 #endif

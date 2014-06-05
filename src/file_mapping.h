@@ -9,8 +9,8 @@
 
 typedef API_PUBLIC struct
 {
-    void*       region;
-    map_size_t  size  ;
+    void*  region;
+    fsp_map_size_t  size;
 
     // do not use
     void*   reg_start;
@@ -22,11 +22,12 @@ typedef API_PUBLIC struct
 #else
 #   error "Unsupported platform"
 #endif
-} mapped_file;
+} fsp_mapped_file;
 
 
-API_PUBLIC mapped_file map_file(char const* file, map_size_t buf_size, map_size_t offset, int write_access);
+API_PUBLIC fsp_mapped_file fsp_map_file(char const* file, fsp_map_size_t buf_size,
+                                    fsp_map_size_t offset, int write_access);
 
-API_PUBLIC int unmap_file(mapped_file const* mf);
+API_PUBLIC int fsp_unmap_file(fsp_mapped_file const* mf);
 
-API_HIDDEN int get_granularity();
+API_HIDDEN int fsp_get_granularity();
