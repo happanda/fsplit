@@ -3,7 +3,7 @@
 #include "size_types.h"
 
 
-size_t const ALPHABET_SIZE;
+extern size_t const ALPHABET_SIZE;
 
 typedef API_PUBLIC struct
 {

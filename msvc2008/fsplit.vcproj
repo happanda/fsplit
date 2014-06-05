@@ -184,6 +184,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath="..\src\cmd_args.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\dfa_search.h"
 				>
 			</File>
