@@ -4,6 +4,8 @@
 #endif
 
 #include "file_stream.h"
+#include "name_gen.h"
+
 
 int main(int argc, char* argv[])
 {
@@ -13,13 +15,14 @@ int main(int argc, char* argv[])
 #endif
     unsigned char  buf[120];
     int  i;
+    char filename[1000];
 
-    //mf = map_file("input", size, 0, 0);
+    //mf = fsp_map_file("input", size, 0, 0);
     //err = GetLastError();
     //buf = (char*)mf.region;
     //for (i = 0; i < mf.size; ++i)
     //    printf("%c", buf[i]);
-    //unmap_file(&mf);
+    //fsp_unmap_file(&mf);
     //GetSystemInfo(&sys_info);
 
     fsp_file_stream fs;
@@ -38,5 +41,6 @@ int main(int argc, char* argv[])
             printf("%d ", (int)buf[i]);
     }
 
+    fsp_gen_name(filename, 1000, "AllYourBase", 1);
     return 0;
 }

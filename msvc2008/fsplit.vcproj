@@ -200,6 +200,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\name_gen.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\size_types.h"
 				>
 			</File>
