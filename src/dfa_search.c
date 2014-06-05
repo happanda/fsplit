@@ -10,15 +10,12 @@ int fsp_automation_init(fsp_automation* aut, char const* pattern)
       , j = 0;
 
     aut->pattern_len = strlen(pattern);
+    aut->delta       = calloc(ALPHABET_SIZE * aut->pattern_len, sizeof(int));
+    aut->pattern     = calloc(aut->pattern_len, sizeof(char));
 
-    aut->delta = calloc(ALPHABET_SIZE * aut->pattern_len, sizeof(int));
-    if (0 == aut->delta)
-        return 0;
-
-    aut->pattern = calloc(aut->pattern_len, sizeof(char));
-    if (0 == aut->pattern)
+    if (0 == aut->delta || 0 == aut->pattern)
     {
-        free(aut->delta);
+        fsp_automation_free(aut);
         return 0;
     }
 
