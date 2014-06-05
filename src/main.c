@@ -3,6 +3,7 @@
 #   include <Windows.h>
 #endif
 
+#include "dfa_search.h"
 #include "file_stream.h"
 #include "name_gen.h"
 
@@ -27,6 +28,8 @@ int main(int argc, char* argv[])
 
     fsp_file_stream fs;
     int rb = 0;
+    fsp_automation aut;
+
 
     fs = fsp_open_file("input", om_read);
     if (fsp_bad(&fs))
@@ -42,5 +45,12 @@ int main(int argc, char* argv[])
     }
 
     fsp_gen_name(filename, 1000, "AllYourBase", 1);
+
+
+    if (fsp_automation_init(&aut, "xy"))
+    {
+        printf("\n\n%d\n", fsp_find_in(&aut, "abcdefghijklmnopqrstuvwxyz"));
+        fsp_automation_free(&aut);
+    }
     return 0;
 }
