@@ -45,7 +45,7 @@ void fsp_automation_free(fsp_automation* aut)
 
 int fsp_automation_find_in(fsp_automation* aut, char const* str, size_t str_len)
 {
-    int i = 0;
+    size_t i;
 
     for (i = 0; i < str_len; ++i) {
         aut->state = aut->delta[ALPHABET_SIZE * aut->state + (unsigned char)str[i]];

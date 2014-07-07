@@ -40,6 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				PreprocessorDefinitions="BUILDING_DLL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -109,6 +110,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
+				PreprocessorDefinitions="BUILDING_DLL"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				WarningLevel="3"
@@ -162,10 +164,6 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\src\cycle_buffer.c"
-				>
-			</File>
-			<File
 				RelativePath="..\src\dfa_search.c"
 				>
 			</File>
@@ -181,6 +179,10 @@
 				RelativePath="..\src\main.c"
 				>
 			</File>
+			<File
+				RelativePath="..\src\shift_buffer.c"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -189,10 +191,6 @@
 			>
 			<File
 				RelativePath="..\src\cmd_args.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\cycle_buffer.h"
 				>
 			</File>
 			<File
@@ -221,6 +219,10 @@
 			</File>
 			<File
 				RelativePath="..\src\name_gen.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\shift_buffer.h"
 				>
 			</File>
 			<File
