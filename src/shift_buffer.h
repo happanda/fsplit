@@ -14,4 +14,4 @@ typedef API_PUBLIC struct
 API_PUBLIC int  fsp_sbuf_init(fsp_shift_buffer* buf, size_t size);
 API_PUBLIC void fsp_sbuf_free(fsp_shift_buffer* buf);
 
-API_PUBLIC void fsp_sbuf_push(fsp_shift_buffer* buf, char const* data, size_t len);
+API_PUBLIC int fsp_sbuf_push(fsp_shift_buffer* buf, char const* data, size_t len);

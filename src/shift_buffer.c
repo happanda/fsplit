@@ -34,13 +34,13 @@ void fsp_sbuf_free(fsp_shift_buffer* buf)
     fsp_zero_sbuf(buf);
 }
 
-void fsp_sbuf_push(fsp_shift_buffer* buf, char const* data, size_t len)
+int fsp_sbuf_push(fsp_shift_buffer* buf, char const* data, size_t len)
 {
     size_t extra_bytes = 0;
     size_t free_bytes = buf->capacity - buf->size;
 
     if (len > buf->capacity)
-        return;
+        len = buf->capacity;
 
     if (free_bytes >= len)
     {
@@ -53,4 +53,6 @@ void fsp_sbuf_push(fsp_shift_buffer* buf, char const* data, size_t len)
         memmove(buf->data, buf->data + extra_bytes, buf->size - extra_bytes);
         memcpy(buf->data + buf->capacity - len, data, len);
     }
+
+    return len;
 }
