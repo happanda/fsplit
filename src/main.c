@@ -12,11 +12,12 @@
 
 
 #define BUF_SIZE 16
+#define FILENAME_LEN 256
 
 int main(int argc, char* argv[])
 {
     fsp_cmd_args cmd_args;
-    fsp_file_stream fs;
+    fsp_file_stream fs, out_file;
     fsp_automation aut;
     fsp_shift_buffer sbuf;
     int i;
@@ -24,6 +25,8 @@ int main(int argc, char* argv[])
     int f_pos = 0;
     int read_size = 0;
     int buf_size = 0;
+    int fragment_num = 0;
+    char filename[FILENAME_LEN];
     unsigned char buf[BUF_SIZE];
 
 
@@ -47,6 +50,10 @@ int main(int argc, char* argv[])
     if (buf_size / 2 < aut.pattern_len)
         buf_size = aut.pattern_len * 2;
     read_size = buf_size;
+    fragment_num = 0;
+
+    fsp_gen_name(filename, FILENAME_LEN, cmd_args.file, fragment_num);
+    out_file = fsp_open_file(filename, om_write);
     while ((num_read = fsp_read(&fs, buf, read_size)) > 0)
     {
         fsp_sbuf_push(&sbuf, buf, num_read);
@@ -59,10 +66,17 @@ int main(int argc, char* argv[])
         if (fsp_aut_not_found == f_pos)
         {
             read_size = buf_size - aut.pattern_len;
+            fsp_write(&out_file, sbuf.data, read_size);
         }
         else
         {
             read_size = f_pos + aut.pattern_len;
+            fsp_write(&out_file, sbuf.data, f_pos);
+
+            fsp_close_file(&out_file);
+            ++fragment_num;
+            fsp_gen_name(filename, FILENAME_LEN, cmd_args.file, fragment_num);
+            out_file = fsp_open_file(filename, om_write);
         }
         printf("%d\n", f_pos);
     }
