@@ -7,6 +7,7 @@
 #include "dfa_search.h"
 #include "file_stream.h"
 #include "name_gen.h"
+#include "shift_buffer.h"
 
 
 int main(int argc, char* argv[])
@@ -32,6 +33,10 @@ int main(int argc, char* argv[])
     fsp_automation aut;
     fsp_cmd_args cmd_args;
 
+    int const data_size = 10;
+    fsp_shift_buffer sh_buf;
+    char data[10];
+
     //if (!fsp_parse(argc, argv, &cmd_args))
     //{
     //    printf("Arguments parse error\n");
@@ -56,9 +61,43 @@ int main(int argc, char* argv[])
 
     if (fsp_automation_init(&aut, "xyz", 3))
     {
-        printf("\n%d\n", fsp_automation_find_in(&aut, "abcdefghijklmnopqrstuvwx", sizeof("abcdefghijklmnopqrstuvwx") - 1));
-        printf("\n%d\n", fsp_automation_find_in(&aut, "yzzzyx", sizeof("yzzzyx") - 1));
+        //printf("\n%d\n", fsp_automation_find_in(&aut, "abcdefghijklmnopqrstuvwx", sizeof("abcdefghijklmnopqrstuvwx") - 1));
+        //printf("\n%d\n", fsp_automation_find_in(&aut, "yzzzyx", sizeof("yzzzyx") - 1));
         fsp_automation_free(&aut);
     }
+
+    for (i = 0; i < data_size; ++i)
+    {
+        data[i] = (char)i;
+    }
+    fsp_sbuf_init(&sh_buf, data_size);
+    fsp_sbuf_push(&sh_buf, data, data_size);
+    for (i = 0; i < data_size; ++i)
+    {
+        printf("%d\n", sh_buf.data[i]);
+    }
+
+    for (i = 0; i < data_size / 2; ++i)
+    {
+        data[i] = (char)(10 + i);
+    }
+    fsp_sbuf_push(&sh_buf, data, data_size / 2);
+    for (i = 0; i < data_size; ++i)
+    {
+        printf("%d\n", sh_buf.data[i]);
+    }
+
+    for (i = 0; i < data_size / 2; ++i)
+    {
+        data[i] = (char)(20 + i);
+    }
+    fsp_sbuf_push(&sh_buf, data, data_size / 2);
+    for (i = 0; i < data_size; ++i)
+    {
+        printf("%d\n", sh_buf.data[i]);
+    }
+
+    fsp_sbuf_free(&sh_buf);
+    _getche();
     return 0;
 }
