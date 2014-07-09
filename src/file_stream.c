@@ -11,15 +11,16 @@
 
 #include "file_stream.h"
 
+
 int fsp_bad(fsp_file_stream const* fs)
 {
     if (NULL == fs)
         return 0;
 
     if (fs->mode == om_read)
-        return fs->stream.mf.region == 0 ? 1 : 0;
+        return (fs->stream.mf.region == 0) ? 1 : 0;
 
-    return fs->stream.file == 0 ? 1 : 0;
+    return (fs->stream.file == 0) ? 1 : 0;
 }
 
 fsp_file_stream fsp_open_file(char const* path, fsp_open_mode om)
