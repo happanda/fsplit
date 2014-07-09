@@ -11,14 +11,19 @@
 #include "testing.h"
 
 
-#define BUF_SIZE 1024
+#define BUF_SIZE 16
 
 int main(int argc, char* argv[])
 {
     fsp_cmd_args cmd_args;
     fsp_file_stream fs;
+    fsp_automation aut;
+    fsp_shift_buffer sbuf;
     int i;
-    int rb = 0;
+    int num_read = 0;
+    int f_pos = 0;
+    int read_size = 0;
+    int buf_size = 0;
     unsigned char buf[BUF_SIZE];
 
 
@@ -35,11 +40,36 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    while ((rb = fsp_read(&fs, buf, BUF_SIZE)) > 0)
+    fsp_sbuf_init(&sbuf, BUF_SIZE);
+    fsp_automation_init(&aut, cmd_args.pattern, strlen(cmd_args.pattern));
+
+    buf_size = BUF_SIZE;
+    if (buf_size / 2 < aut.pattern_len)
+        buf_size = aut.pattern_len * 2;
+    read_size = buf_size;
+    while ((num_read = fsp_read(&fs, buf, read_size)) > 0)
     {
-        for (i = 0; i < rb; ++i)
-            printf("%d ", (int)buf[i]);
+        fsp_sbuf_push(&sbuf, buf, num_read);
+
+        for (i = 0; i < sbuf.size; ++i)
+            printf("%c", sbuf.data[i]);
+        printf("\n");
+
+        f_pos = fsp_automation_find_in(&aut, sbuf.data, sbuf.size);
+        if (fsp_aut_not_found == f_pos)
+        {
+            read_size = buf_size - aut.pattern_len;
+        }
+        else
+        {
+            read_size = f_pos + aut.pattern_len;
+        }
+        printf("%d\n", f_pos);
     }
+
+    fsp_automation_free(&aut);
+    fsp_sbuf_free(&sbuf);
+    fsp_close_file(&fs);
 
     //test();
     _getche();

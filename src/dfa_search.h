@@ -13,6 +13,7 @@ typedef API_PUBLIC struct
     int state;
 } fsp_automation;
 
+extern int const fsp_aut_not_found;
 
 API_PUBLIC int  fsp_automation_init(fsp_automation* aut, char const* pattern, size_t pattern_len);
 API_PUBLIC void fsp_automation_free(fsp_automation* aut);

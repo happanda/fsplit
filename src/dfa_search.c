@@ -5,6 +5,8 @@
 
 size_t const ALPHABET_SIZE = 256;
 
+int const fsp_aut_not_found = -1;
+
 int fsp_automation_init(fsp_automation* aut, char const* pattern, size_t pattern_len)
 {
     int i = 0
@@ -50,8 +52,8 @@ int fsp_automation_find_in(fsp_automation* aut, char const* str, size_t str_len)
     for (i = 0; i < str_len; ++i) {
         aut->state = aut->delta[ALPHABET_SIZE * aut->state + (unsigned char)str[i]];
         if (aut->state >= aut->pattern_len)
-            return i;
+            return i - aut->pattern_len + 1;
     }
 
-    return -1;
+    return fsp_aut_not_found;
 }
