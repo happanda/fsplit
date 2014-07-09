@@ -229,6 +229,10 @@
 				RelativePath="..\src\size_types.h"
 				>
 			</File>
+			<File
+				RelativePath="..\src\testing.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
