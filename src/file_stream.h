@@ -26,9 +26,11 @@ typedef API_PUBLIC struct
     } stream;
 } fsp_file_stream;
 
+API_PUBLIC void fsp_zero_fstream(fsp_file_stream* fs);
+API_PUBLIC int fsp_is_opened (fsp_file_stream const* fs);
 API_PUBLIC int fsp_bad       (fsp_file_stream const* fs);
 API_PUBLIC int fsp_close_file(fsp_file_stream* fs);
-API_PUBLIC fsp_file_stream fsp_open_file (char const* path, fsp_open_mode om);
+API_PUBLIC fsp_file_stream fsp_open_file(char const* path, fsp_open_mode om);
 
 API_PUBLIC int fsp_read (fsp_file_stream* fs, char*       buf, size_t buf_size);
 API_PUBLIC int fsp_write(fsp_file_stream* fs, char const* buf, size_t buf_size);

@@ -21,11 +21,13 @@ int main(int argc, char* argv[])
     fsp_automation aut;
     fsp_shift_buffer sbuf;
     int i;
-    int num_read = 0;
-    int f_pos = 0;
-    int read_size = 0;
-    int buf_size = 0;
-    int fragment_num = 0;
+    int num_read = 0
+      , f_pos = 0
+      , read_size = 0
+      , to_write = 0
+      , buf_size = 0
+      , fragment_num = 0
+      , do_close = 0;
     char filename[FILENAME_LEN];
     unsigned char buf[BUF_SIZE];
 
@@ -52,34 +54,49 @@ int main(int argc, char* argv[])
     read_size = buf_size;
     fragment_num = 0;
 
-    fsp_gen_name(filename, FILENAME_LEN, cmd_args.file, fragment_num);
-    out_file = fsp_open_file(filename, om_write);
+    fsp_zero_fstream(&out_file);
+
     while ((num_read = fsp_read(&fs, buf, read_size)) > 0)
     {
+        to_write += num_read;
         fsp_sbuf_push(&sbuf, buf, num_read);
 
-        for (i = 0; i < sbuf.size; ++i)
-            printf("%c", sbuf.data[i]);
-        printf("\n");
-
         f_pos = fsp_automation_find_in(&aut, sbuf.data, sbuf.size);
+
         if (fsp_aut_not_found == f_pos)
         {
             read_size = buf_size - aut.pattern_len;
-            fsp_write(&out_file, sbuf.data, read_size);
+            to_write += read_size;
         }
         else
         {
             read_size = f_pos + aut.pattern_len;
-            fsp_write(&out_file, sbuf.data, f_pos);
+            to_write = f_pos;
+            do_close = 1;
+        }
 
-            fsp_close_file(&out_file);
-            ++fragment_num;
+        // write to output
+        if (!fsp_is_opened(&out_file))
+        {
             fsp_gen_name(filename, FILENAME_LEN, cmd_args.file, fragment_num);
             out_file = fsp_open_file(filename, om_write);
+            ++fragment_num;
         }
-        printf("%d\n", f_pos);
+        fsp_write(&out_file, sbuf.data, to_write);
+        if (do_close)
+        {
+            fsp_close_file(&out_file);
+            do_close = 0;
+        }
+
+#ifndef NDEBUG
+        for (i = 0; i < read_size; ++i)
+            printf("%c", sbuf.data[i]);
+        printf("\n");
+#endif
     }
+
+    fsp_close_file(&out_file);
 
     fsp_automation_free(&aut);
     fsp_sbuf_free(&sbuf);

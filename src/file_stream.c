@@ -12,6 +12,16 @@
 #include "file_stream.h"
 
 
+void fsp_zero_fstream(fsp_file_stream* fs)
+{
+    memset(fs, 0, sizeof(fsp_file_stream));
+}
+
+int fsp_is_opened(fsp_file_stream const* fs)
+{
+    return NULL != fs->path;
+}
+
 int fsp_bad(fsp_file_stream const* fs)
 {
     if (NULL == fs)
@@ -28,7 +38,8 @@ fsp_file_stream fsp_open_file(char const* path, fsp_open_mode om)
     fsp_file_stream fs;
     size_t      path_len;
 
-    memset(&fs, 0, sizeof(fs));
+    fsp_zero_fstream(&fs);
+
     path_len = strlen(path) + 1;
 
     fs.mode = om;
@@ -67,7 +78,12 @@ int fsp_close_file(fsp_file_stream* fs)
     int result = 0;
 
     if (fs->path != 0)
+    {
         free(fs->path);
+        fs->path = NULL;
+    }
+    else
+        return 1;
 
     switch (fs->mode)
     {
