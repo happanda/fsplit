@@ -24,10 +24,10 @@ int main(int argc, char* argv[])
     int num_read = 0
       , f_pos = 0
       , read_size = 0
-      , to_write = 0
+      , write_size = 0
       , buf_size = 0
       , fragment_num = 0
-      , do_close = 0;
+      , found = 0;
     char filename[FILENAME_LEN];
     unsigned char buf[BUF_SIZE];
 
@@ -58,7 +58,6 @@ int main(int argc, char* argv[])
 
     while ((num_read = fsp_read(&fs, buf, read_size)) > 0)
     {
-        to_write += num_read;
         fsp_sbuf_push(&sbuf, buf, num_read);
 
         f_pos = fsp_automation_find_in(&aut, sbuf.data, sbuf.size);
@@ -66,13 +65,13 @@ int main(int argc, char* argv[])
         if (fsp_aut_not_found == f_pos)
         {
             read_size = buf_size - aut.pattern_len;
-            to_write += read_size;
+            write_size = read_size;
         }
         else
         {
             read_size = f_pos + aut.pattern_len;
-            to_write = f_pos;
-            do_close = 1;
+            write_size = f_pos;
+            found = 1;
         }
 
         // write to output
@@ -82,11 +81,13 @@ int main(int argc, char* argv[])
             out_file = fsp_open_file(filename, om_write);
             ++fragment_num;
         }
-        fsp_write(&out_file, sbuf.data, to_write);
-        if (do_close)
+
+        fsp_write(&out_file, sbuf.data, write_size);
+        fsp_sbuf_pop(&sbuf, read_size);
+        if (found)
         {
             fsp_close_file(&out_file);
-            do_close = 0;
+            found = 0;
         }
 
 #ifdef FSPLIT_DEBUG
@@ -96,7 +97,11 @@ int main(int argc, char* argv[])
 #endif
     }
 
-    fsp_close_file(&out_file);
+    if (fsp_is_opened(&out_file))
+    {
+        fsp_write(&out_file, sbuf.data, sbuf.size);
+        fsp_close_file(&out_file);
+    }
 
     fsp_automation_free(&aut);
     fsp_sbuf_free(&sbuf);

@@ -46,7 +46,7 @@ int fsp_sbuf_pop(fsp_shift_buffer* buf, size_t len)
     }
     else
     {
-        memmove(buf->data, buf->data + len, buf->size - buf->len);
+        memmove(buf->data, buf->data + len, buf->size - len);
         buf->size -= len;
     }
     return len;
