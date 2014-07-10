@@ -34,6 +34,24 @@ void fsp_sbuf_free(fsp_shift_buffer* buf)
     fsp_zero_sbuf(buf);
 }
 
+int fsp_sbuf_pop(fsp_shift_buffer* buf, size_t len)
+{
+    if (len > buf->size)
+    {
+        len = buf->size;
+        buf->size = 0;
+#ifdef FSPLIT_DEBUG
+        memset(buf->data, 0, buf->capacity);
+#endif
+    }
+    else
+    {
+        memmove(buf->data, buf->data + len, buf->size - buf->len);
+        buf->size -= len;
+    }
+    return len;
+}
+
 int fsp_sbuf_push(fsp_shift_buffer* buf, char const* data, size_t len)
 {
     size_t extra_bytes = 0;
