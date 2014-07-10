@@ -89,7 +89,7 @@ int main(int argc, char* argv[])
             do_close = 0;
         }
 
-#ifndef NDEBUG
+#ifdef FSPLIT_DEBUG
         for (i = 0; i < read_size; ++i)
             printf("%c", sbuf.data[i]);
         printf("\n");
