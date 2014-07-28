@@ -16,7 +16,12 @@
 *.suo
 *.user
 *.pdb
+*.sdf
 
 # Qt Creator
 *.Debug
 *.Release
+
+msvc2010/bin
+msvc2010/obj
+msvc2010/ipch
