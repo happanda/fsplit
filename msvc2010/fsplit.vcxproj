@@ -11,16 +11,24 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\cmd_args.h" />
+    <ClInclude Include="..\src\dfa_search.h" />
+    <ClInclude Include="..\src\dyn_lib.h" />
     <ClInclude Include="..\src\export.h" />
     <ClInclude Include="..\src\file_mapping.h" />
     <ClInclude Include="..\src\file_op.h" />
     <ClInclude Include="..\src\file_stream.h" />
+    <ClInclude Include="..\src\name_gen.h" />
+    <ClInclude Include="..\src\shift_buffer.h" />
     <ClInclude Include="..\src\size_types.h" />
+    <ClInclude Include="..\src\testing.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\dfa_search.c" />
     <ClCompile Include="..\src\file_mapping.c" />
     <ClCompile Include="..\src\file_stream.c" />
     <ClCompile Include="..\src\main.c" />
+    <ClCompile Include="..\src\shift_buffer.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2B12D362-3044-4245-B520-180201A93249}</ProjectGuid>
