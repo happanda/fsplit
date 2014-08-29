@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
     unsigned char buf[BUF_SIZE];
 
 
-    if (!fsp_parse(argc, argv, &cmd_args))
+    if (!fsp_cmd_args_parse(argc, argv, &cmd_args))
     {
         printf("Arguments parse error\n");
         return 1;
@@ -106,7 +106,8 @@ int main(int argc, char* argv[])
     fsp_automation_free(&aut);
     fsp_sbuf_free(&sbuf);
     fsp_close_file(&fs);
-
+    fsp_cmd_args_free(&cmd_args);
+    
     //test();
     _getche();
     return 0;
