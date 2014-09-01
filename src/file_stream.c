@@ -40,10 +40,10 @@ fsp_file_stream fsp_open_file(char const* path, fsp_open_mode om)
 
     fsp_zero_fstream(&fs);
 
-    path_len = strlen(path) + 1;
+    path_len = 1 + strlen(path);
 
     fs.mode = om;
-    fs.path = malloc(path_len);
+    fs.path = (char*)malloc(path_len);
     if (!fs.path)
         return fs;
 

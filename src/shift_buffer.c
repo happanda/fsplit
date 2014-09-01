@@ -14,7 +14,7 @@ int fsp_sbuf_init(fsp_shift_buffer* buf, size_t size)
 {
     fsp_zero_sbuf(buf);
 
-    buf->data = malloc(size * sizeof(char));
+    buf->data = (char*)malloc(size * sizeof(char));
 
     if (!buf)
     {

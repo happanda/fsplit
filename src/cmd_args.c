@@ -6,11 +6,11 @@
 int fsp_get_token_count(char const* pattern)
 {
     int count = 0;
-    int len = strlen(pattern);
+    int len = 1 + strlen(pattern);
     char* fst = NULL;
     char* tok = NULL;
     
-    fst = malloc(len * sizeof(char));
+    fst = (char*)malloc(len * sizeof(char));
     strncpy(fst, pattern, len);
     
     tok = strtok(fst, " ");
@@ -26,7 +26,7 @@ int fsp_get_token_count(char const* pattern)
 char* fsp_translate_bytes(char const* text)
 {
     int count = fsp_get_token_count(text);
-    int len = strlen(text);
+    int len = 1 + strlen(text);
     char* fst = NULL;
     char* tok = NULL;
     char* pattern = NULL;
@@ -35,15 +35,15 @@ char* fsp_translate_bytes(char const* text)
     
     if (0 == count)
     {
-        pattern = malloc(sizeof(char));
+        pattern = (char*)malloc(sizeof(char));
         *pattern = '\0';
         return pattern;
     }
     else
     {
-        pattern = malloc(count * sizeof(char));
+        pattern = (char*)malloc((1 + count) * sizeof(char));
         
-        fst = malloc(len * sizeof(char));
+        fst = (char*)malloc(len * sizeof(char));
         strncpy(fst, text, len);
         
         i = 0;
@@ -62,6 +62,8 @@ char* fsp_translate_bytes(char const* text)
             tok = strtok(NULL, " ");
         }
         free(fst);
+        
+        pattern[count] = 0;
         return pattern;
     }
 }
@@ -81,19 +83,21 @@ int fsp_cmd_args_parse(int argc, char* argv[], fsp_cmd_args* args)
     {
         if (!strcmp("-f", argv[i]) && i + 1 < argc)
         {
-            len = strlen(argv[i + 1]);
-            args->file = malloc(len * sizeof(char));
+            len = 1 + strlen(argv[i + 1]);
+            args->file = (char*)malloc(len * sizeof(char));
             strncpy(args->file, argv[i + 1], len);
+            args->file[len - 1] = 0;
         }
         else if (!strcmp("-s", argv[i]) && i + 1 < argc)
         {
-            len = strlen(argv[i + 1]);
-            args->pattern = malloc(len * sizeof(char));
+            len = 1 + strlen(argv[i + 1]);
+            args->pattern = (char*)malloc(len * sizeof(char));
             strncpy(args->pattern, argv[i + 1], len);
+            args->pattern[len - 1] = 0;
         }
         else if (!strcmp("-b", argv[i]) && i + 1 < argc)
         {
-            len = strlen(argv[i + 1]);
+            len = 1 + strlen(argv[i + 1]);
             args->pattern = fsp_translate_bytes(argv[i + 1]);
         }
     }

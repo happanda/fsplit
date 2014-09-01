@@ -5,8 +5,8 @@
 
 typedef API_PUBLIC struct
 {
-    char const*  file;
-    char const*  pattern;
+    char*  file;
+    char*  pattern;
 } fsp_cmd_args;
 
 API_PUBLIC void fsp_cmd_args_zero(fsp_cmd_args* args);
