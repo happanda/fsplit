@@ -1,4 +1,5 @@
 #pragma once
+#include <string.h>
 #include "cmd_args.h"
 
 
@@ -74,7 +75,7 @@ int fsp_cmd_args_parse(int argc, char* argv[], fsp_cmd_args* args)
 {
     int i = 0;
     int len = 0;
-    fsp_zero(args);
+    fsp_cmd_args_zero(args);
 
     for (i = 0; i < argc; ++i)
     {
