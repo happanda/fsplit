@@ -72,6 +72,16 @@ int main(int argc, char* argv[])
         {
             read_size = f_pos + aut.pattern_len;
             write_size = f_pos;
+            
+            if (stick_right == cmd_args.stick)
+                read_size -= aut.pattern_len;
+            else if (stick_left == cmd_args.stick)
+                write_size += aut.pattern_len;
+            else if (stick_both == cmd_args.stick)
+            {
+                read_size -= aut.pattern_len;
+                write_size += aut.pattern_len;
+            }
             found = 1;
         }
 
@@ -110,6 +120,6 @@ int main(int argc, char* argv[])
     fsp_cmd_args_free(&cmd_args);
     
     //test();
-    _getche();
+    //_getche();
     return 0;
 }

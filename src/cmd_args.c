@@ -100,6 +100,18 @@ int fsp_cmd_args_parse(int argc, char* argv[], fsp_cmd_args* args)
             len = 1 + strlen(argv[i + 1]);
             args->pattern = fsp_translate_bytes(argv[i + 1]);
         }
+        else if (!strcmp("-sl", argv[i]))
+        {
+            args->stick = stick_left;
+        }
+        else if (!strcmp("-sr", argv[i]))
+        {
+            args->stick = stick_right;
+        }
+        else if (!strcmp("-sb", argv[i]))
+        {
+            args->stick = stick_both;
+        }
     }
     return (0 != args->file && 0 != args->pattern) ? 1 : 0;
 }
