@@ -28,7 +28,8 @@ int main(int argc, char* argv[])
       , write_size = 0
       , buf_size = 0
       , fragment_num = 0
-      , found = 0;
+      , found = 0
+      , stick_shift = 0;
     char filename[FILENAME_LEN];
     unsigned char buf[BUF_SIZE];
 
@@ -57,16 +58,17 @@ int main(int argc, char* argv[])
 
     fsp_zero_fstream(&out_file);
 
-    while ((num_read = fsp_read(&fs, buf, read_size)) > 0)
+    while ((num_read = fsp_read(&fs, buf, read_size)) > 0 || sbuf.size > 0)
     {
         fsp_sbuf_push(&sbuf, buf, num_read);
 
-        f_pos = fsp_automation_find_in(&aut, sbuf.data, sbuf.size);
+        f_pos = fsp_automation_find_in(&aut, sbuf.data/* + stick_shift*/, sbuf.size);
 
         if (fsp_aut_not_found == f_pos)
         {
-            read_size = buf_size - aut.pattern_len;
+            read_size = sbuf.size;
             write_size = read_size;
+            stick_shift = 0;
         }
         else
         {
@@ -74,13 +76,20 @@ int main(int argc, char* argv[])
             write_size = f_pos;
             
             if (stick_right == cmd_args.stick)
+            {
                 read_size -= aut.pattern_len;
+                stick_shift = aut.pattern_len;
+            }
             else if (stick_left == cmd_args.stick)
+            {
                 write_size += aut.pattern_len;
+                stick_shift = 0;
+            }
             else if (stick_both == cmd_args.stick)
             {
                 read_size -= aut.pattern_len;
                 write_size += aut.pattern_len;
+                stick_shift = aut.pattern_len;
             }
             found = 1;
         }
