@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
     {
         fsp_sbuf_push(&sbuf, buf, num_read);
 
-        f_pos = fsp_automation_find_in(&aut, sbuf.data/* + stick_shift*/, sbuf.size);
+        f_pos = fsp_automation_find_in(&aut, sbuf.data + stick_shift, sbuf.size);
 
         if (fsp_aut_not_found == f_pos)
         {
@@ -72,6 +72,9 @@ int main(int argc, char* argv[])
         }
         else
         {
+            f_pos += stick_shift;
+            stick_shift = 0;
+
             read_size = f_pos + aut.pattern_len;
             write_size = f_pos;
             
@@ -111,9 +114,9 @@ int main(int argc, char* argv[])
         }
 
 #ifdef FSPLIT_DEBUG
-        for (i = 0; i < read_size; ++i)
-            printf("%c", sbuf.data[i]);
-        printf("\n");
+        //for (i = 0; i < read_size; ++i)
+        //    printf("%c", sbuf.data[i]);
+        //printf("\n");
 #endif
     }
 

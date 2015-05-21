@@ -48,6 +48,9 @@ int fsp_sbuf_pop(fsp_shift_buffer* buf, size_t len)
     {
         memmove(buf->data, buf->data + len, buf->size - len);
         buf->size -= len;
+#ifdef FSPLIT_DEBUG
+        memset(buf->data + buf->size, 0, buf->capacity - buf->size);
+#endif
     }
     return len;
 }
